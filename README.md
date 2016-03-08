@@ -1,12 +1,8 @@
 # Análisis de Variantes Detectadas por Secuenciación Masiva
 
-Comentarios acerca de cómo analizar variantes detectadas por secuenciación masiva de ADN.
+El presente documento contienen los comentarios hechos por Rigoberto Rosendo Gutierrez acerca de cómo analizar variantes detectadas por secuenciación masiva de ADN.
 
-
-
-
-
-LINEAMIENTO PARA EL ANÁLISIS DE VARIANTES DE SECUENCIACIÓN MASIVA
+## Filtrar
 
 1. Correr las muestras por Variant Effec Predictor (VEP) eligiendo todas las opciones que te ofrece este programa en línea, para el GRCh37, a menos que se diga lo contrario o que se actualice en ese sentido los software de la unidad de secuenciación.
 2. Una vez teniendo el resultado del procesamiento de VEP, tienes que bajar los resultados o leerlos directamente como sea sencillo, lo ideal es bajar en .txt  el resultado de todas las variantes y además uno por cada filtro, es decir un programa que sólo incluya sift, otro que sólo incluya los resultados de polyphen, otro que incluya clinsig, y asi sucesicamente, este punto lo desgloso en el número 3.
@@ -18,10 +14,17 @@ LINEAMIENTO PARA EL ANÁLISIS DE VARIANTES DE SECUENCIACIÓN MASIVA
 8. En otra carpeta pones las que dicen algo en CADD_phred, eliminando el resto y también las que antes ya viste, es decir, las que tienen algo en polyphen, sift, consecuencia o clinsig, esto de la eliminación es algo que vas a hacer con cada una de las que vienen, de tal forma que tienes que ir filtrando sin perder información y sin que algún dato se quede también sin ser leído. Una nota importante y útil es que en las que vienen elegirás todas las variantes en que haya algún reporte o puntuación, después irás eliminando individualmente de acuerdo con algunos datos que te daré más adelante, aquí para que no te pierdas, si dice alguna letra o número, los eliges todos, sin excepción, sólo eliminando como te dije, aquellas que ya habías leído.
 9. De esa forma vas a ir haciendo una carpeta para Ancestral_allele, CADD_phred, FATHMM_pred, GERP++_RS, LRT_pred, MetaLR_pred, MetaSVM_pred, MutationAssessor_pred, MutationTaster_pred, PROVEAN_pred, Reliability_index, todos los clinvar, VEST, BLOSUM62 y Condel, como vez, son ya demasiados y todos aportan datos importantes e interesantes, por lo que debes considerarlos, utilizar sólo Sift y Polyphen como únicos predictores estadísticamente hablando es incorrecto.
 10. Una vez que tienes todas tus carpetas vas a marcar o eliminar (yo prefiero marcar con un color que sé que no voy a utilizar sólo en caso de ser necesario) aquellas donde se observa en la columna de locación un fenómeno de continuidad, por ejemplo 1:7340196, 1:7340197, 1:7340203, etc. porque estas reflejan más que nada un error de la polimerasa al momento de la secuenciación que de un dato real, de esa forma ya te quedas con menos variantes para trabajar por cada carpeta.
+
+
+## Examinar con un visualizador
+
 11. El siguiente paso es abrir algún programa como Tablet, BWA o IGV (este último es el que tenemos más probado y con mayor experiencia) para visualizar tus variantes, que serán todas aquellas que se encuentren sin marcar hasta este momento en cada una de tus carpetas de sift, polyphen, clinsig, consecuencia, sift y polyphen, para las otras carpetas de programas nuevos es lo mismo pero te diré más adelante los parámetros para que además de este les hagas un filtro adicional.
 12. Los criterios para IGV ya están en otro escrito que también te hice llegar vía correo electrónico y que anexo nuevamente en otro documento. Las que no pasan la prueba con criterios de IGV yo prefiero marcarlas de un color oscuro, en señal de que ya las vi y no pasan los criterios mínimos necesarios de IGV, y por tanto no podrían pasar a la siguiente fase.
 13.  Las que pasan los criterios de IGV pero con ciertas dudas las marco en amarillo, haciendo referencia al semáforo, como dejándolas en señal de alarma y que en un momento dado podrían utilizarse dependiendo lo que encontremos en otras.
 14. Las que pasan a la perfección los criterios de IGV, como para asegurar que incluso se verán sin necesidad de ser confirmadas, las marco de rojo, en señal de que son potenciales candidatas a hacer un siguiente análisis.
+
+## Análisis con NCBI
+
 15. El análisis siguiente es con las bases de datos NCBI. En esta función buscaremos aquellas en todas las carpetas, ordenándolas lógicamente para facilitar ese proceso, aquellas que ya se conocen y por tanto tienen un rs, aquí la dinámica es que primero me voy a la primera columna del Excel (#Uploaded_variation) y en la columna de Existing_variation, allí es donde se ubican todos los rs. Ya en el NCBI, primero busco en SNP y coloco el rs, si desde allí me dice que es benigna por ejemplo, o que el significado clínico es no conocido y que además es intrónica, desde allí la desechamos, no perdemos el tiempo y pasamos a otra variante. Desglosaré este punto:
 16. Si la variante se reporta como probable patológica o patológica entonces la revisamos en ClinVar, incluso también revisamos las que dicen no conocida o desconocida, siempre y cuando no sea intrónica. Si es intrónica pero se reporta como patológica o probable patológica, las seleccionamos invariablemente para seguir estudiándola. 
 17. Ya en clinvar debemos revisar si el cambio de aminoácido y el cambio de nucleótido que tiene nuestro paciente coincide con el que reportan en la literatura, para esto nos podemos apoyar en el Excel (obtenido de la salida del VEP), en las columnas de Allele, HGVSc, HGVSp, cDNA_position, CDS_position, Protein_position, Amino_acids, Codons y MutationTaster_AAE. Si no hay coincidencia, la única manera por la que la que podríamos aceptarla es que no sea intrónica y que además en otros programas de predicción se reporte como patológica o probable patológica y que además tenga una buena calidad al IGV.
